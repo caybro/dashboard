@@ -58,6 +58,7 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
     app.setWindowIcon(QIcon(":/images/gauge.svg"));
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps);
 
     QFontDatabase::addApplicationFont(":/fonts/NotoSansUI-Regular.ttf");
     app.setFont(QFont("Noto Sans UI"));
