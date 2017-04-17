@@ -53,6 +53,7 @@ import QtQuick.Window 2.1
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Extras 1.4
+import Qt.labs.settings 1.0
 
 Window {
     id: root
@@ -63,6 +64,14 @@ Window {
 
     color: "#161616"
     title: "Dashboard Demo"
+
+    Settings {
+        category: "MainWindow"
+        property alias x: root.x
+        property alias y: root.y
+        property alias width: root.width
+        property alias height: root.height
+    }
 
     ValueSource {
         id: valueSource
