@@ -272,7 +272,7 @@ Window {
                     }
                     Label { text: qsTr("Max RPM:") }
                     SpinBox {
-                        minimumValue: 3
+                        minimumValue: 8
                         maximumValue: 10
                         stepSize: 1
                         value: tachometer.maximumValue

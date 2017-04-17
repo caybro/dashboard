@@ -60,11 +60,13 @@ DashboardGaugeStyle {
     needleBaseWidth: toPixels(0.08)
     needleTipWidth: toPixels(0.03)
 
+    property int redZoneStart: 7
+
     tickmark: Rectangle {
         implicitWidth: toPixels(0.03)
         antialiasing: true
         implicitHeight: toPixels(0.08)
-        color: styleData.value >= 7 ? Qt.rgba(0.5, 0, 0, 1) : "#c8c8c8"
+        color: styleData.value >= redZoneStart ? Qt.rgba(0.5, 0, 0, 1) : "#c8c8c8"
     }
 
     minorTickmark: null
@@ -72,11 +74,14 @@ DashboardGaugeStyle {
     tickmarkLabel: Text {
         font.pixelSize: Math.max(6, toPixels(0.15))
         text: styleData.value
-        color: styleData.value >= 7 ? Qt.rgba(0.5, 0, 0, 1) : "#c8c8c8"
+        color: styleData.value >= redZoneStart ? Qt.rgba(0.5, 0, 0, 1) : "#c8c8c8"
         antialiasing: true
     }
 
     background: Canvas {
+        readonly property real maxRpm: tachometerStyle.control.maximumValue
+        onMaxRpmChanged: requestPaint()
+
         onPaint: {
             var ctx = getContext("2d");
             ctx.reset();
@@ -85,13 +90,13 @@ DashboardGaugeStyle {
             ctx.beginPath();
             ctx.lineWidth = tachometerStyle.toPixels(0.08);
             ctx.strokeStyle = Qt.rgba(0.5, 0, 0, 1);
-            var warningCircumference = maximumValueAngle - minimumValueAngle * 0.1;
             var startAngle = maximumValueAngle - 90;
             ctx.arc(outerRadius, outerRadius,
-                // Start the line in from the decorations, and account for the width of the line itself.
-                outerRadius - tickmarkInset - ctx.lineWidth / 2,
-                degToRad(startAngle - angleRange / 8 + angleRange * 0.015),
-                degToRad(startAngle - angleRange * 0.015), false);
+                    // Start the line in from the decorations, and account for the width of the line itself.
+                    outerRadius - tickmarkInset - ctx.lineWidth / 2,
+                    degToRad(valueToAngle(redZoneStart) - 90 + angleRange * 0.015),
+                    degToRad(startAngle - angleRange * 0.015),
+                    false);
             ctx.stroke();
         }
 
