@@ -1,4 +1,4 @@
-/****************************************************************************
+/***************************************************************************
 **
 ** Copyright (C) 2016 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
@@ -53,6 +53,7 @@ import QtQuick.Window 2.1
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Extras 1.4
+import QtQuick.Layouts 1.3
 import Qt.labs.settings 1.0
 
 Window {
@@ -64,6 +65,8 @@ Window {
 
     color: "#161616"
     title: "Dashboard Demo"
+
+    onFrameSwapped: print("Started")
 
     Settings {
         category: "MainWindow"
@@ -201,144 +204,142 @@ Window {
         }
     }
 
-    Item {
+    ColumnLayout {
         id: controls
         anchors {
             right: parent.right
             top: parent.top
             bottom: parent.bottom
-            margins: 5
         }
-        width: controlsColumn.width
+        width: childrenRect.width
 
         Rectangle {
             anchors.fill: parent
             color: "#c8c8c8"
         }
 
-        Column {
-            id: controlsColumn
-            width: childrenRect.width
-            spacing: 10
+        RowLayout {
+            Label { Layout.fillWidth: true; text: qsTr("Demo mode") }
+            Switch { id: demoSwitch; onCheckedChanged: checked ? valueSource.startDemo() : valueSource.stopDemo() }
+        }
 
-            Row {
-                spacing: 5
-                Label { text: qsTr("Demo mode") }
-                Switch { id: demoSwitch; onClicked: checked ? valueSource.startDemo() : valueSource.stopDemo() }
-            }
+        GroupBox {
+            title: qsTr("Speedometer")
+            enabled: !demoSwitch.checked
+            Layout.fillWidth: true
 
-            GroupBox {
-                title: qsTr("Speedometer")
-                enabled: !demoSwitch.checked
-
-                Grid {
-                    columns: 2
-                    columnSpacing: 5
-                    Label { text: qsTr("Speed:") }
-                    SpinBox {
-                        minimumValue: speedometer.minimumValue
-                        maximumValue: speedometer.maximumValue
-                        stepSize: 5
-                        onValueChanged: valueSource.kph = value
-                        Component.onCompleted: value = valueSource.kph
-                    }
-                    Label { text: qsTr("Max speed:") }
-                    SpinBox {
-                        minimumValue: speedometer.minimumValue
-                        maximumValue: 400
-                        stepSize: 20
-                        onValueChanged: speedometer.maximumValue = value
-                        Component.onCompleted: value = speedometer.maximumValue
-                    }
-                    Label { text: qsTr("Needle color:") }
-                    ColorButton { color: valueSource.needleColor; onAccepted: valueSource.needleColor = color }
-                }
-            }
-
-            GroupBox {
-                title: qsTr("Tachometer")
-                enabled: !demoSwitch.checked
-
-                Grid {
-                    columns: 2
-                    columnSpacing: 5
-                    Label { text: qsTr("RPM:") }
-                    SpinBox {
-                        minimumValue: tachometer.minimumValue
-                        maximumValue: tachometer.maximumValue
-                        decimals: 1
-                        onValueChanged: valueSource.rpm = value
-                        Component.onCompleted: value = valueSource.rpm
-                    }
-                    Label { text: qsTr("Max RPM:") }
-                    SpinBox {
-                        minimumValue: 8
-                        maximumValue: 10
-                        stepSize: 1
-                        value: tachometer.maximumValue
-                        onValueChanged: tachometer.maximumValue = value
-                    }
-                }
-            }
-
-            Row {
-                spacing: 5
-                enabled: !demoSwitch.checked
-
-                Label { text: qsTr("Fuel level:") }
+            GridLayout {
+                anchors.fill: parent
+                columns: 2
+                columnSpacing: 5
+                Label { Layout.fillWidth: true; text: qsTr("Speed:") }
                 SpinBox {
-                    minimumValue: 0
-                    maximumValue: 1
-                    decimals: 1
-                    stepSize: 0.1
-                    onValueChanged: valueSource.fuel = value
-                    Component.onCompleted: value = valueSource.fuel
+                    minimumValue: speedometer.minimumValue
+                    maximumValue: speedometer.maximumValue
+                    stepSize: 5
+                    onValueChanged: valueSource.kph = value
+                    Component.onCompleted: value = valueSource.kph
                 }
-            }
-
-            Row {
-                spacing: 5
-                enabled: !demoSwitch.checked
-
-                Label { text: qsTr("Oil temp.:") }
+                Label { Layout.fillWidth: true; text: qsTr("Max speed:") }
                 SpinBox {
-                    minimumValue: 0
-                    maximumValue: 1
+                    minimumValue: speedometer.minimumValue
+                    maximumValue: 360
+                    stepSize: 20
+                    onValueChanged: speedometer.maximumValue = value
+                    Component.onCompleted: value = speedometer.maximumValue
+                }
+                Label { text: qsTr("Needle color:") }
+                ColorButton { color: valueSource.needleColor; onAccepted: valueSource.needleColor = color }
+            }
+        }
+
+        GroupBox {
+            title: qsTr("Tachometer")
+            enabled: !demoSwitch.checked
+            Layout.fillWidth: true
+
+            GridLayout {
+                anchors.fill: parent
+                columns: 2
+                columnSpacing: 5
+                Label { Layout.fillWidth: true; text: qsTr("RPM:") }
+                SpinBox {
+                    minimumValue: tachometer.minimumValue
+                    maximumValue: tachometer.maximumValue
                     decimals: 1
-                    stepSize: 0.1
-                    onValueChanged: valueSource.temperature = value
-                    Component.onCompleted: value = valueSource.temperature
+                    onValueChanged: valueSource.rpm = value
+                    Component.onCompleted: value = valueSource.rpm
+                }
+                Label { Layout.fillWidth: true; text: qsTr("Max RPM:") }
+                SpinBox {
+                    minimumValue: 8
+                    maximumValue: 10
+                    stepSize: 1
+                    value: tachometer.maximumValue
+                    onValueChanged: tachometer.maximumValue = value
                 }
             }
+        }
 
-            GroupBox {
-                title: qsTr("Blinkers")
-                enabled: !demoSwitch.checked
-                Column {
-                    spacing: 5
+        RowLayout {
+            enabled: !demoSwitch.checked
 
-                    CheckBox { id: leftBlinker; text: qsTr("Left");
-                        onClicked: {
-                            if (checked) {
-                                rightBlinker.checked = false;
-                                valueSource.turnSignal = Qt.LeftArrow;
-                            } else {
-                                valueSource.turnSignal = Qt.NoArrow;
-                            }
+            Label { Layout.fillWidth: true; text: qsTr("Fuel level:") }
+            SpinBox {
+                minimumValue: 0
+                maximumValue: 1
+                decimals: 1
+                stepSize: 0.1
+                onValueChanged: valueSource.fuel = value
+                Component.onCompleted: value = valueSource.fuel
+            }
+        }
+
+        RowLayout {
+            enabled: !demoSwitch.checked
+
+            Label { Layout.fillWidth: true; text: qsTr("Oil temp.:") }
+            SpinBox {
+                minimumValue: 0
+                maximumValue: 1
+                decimals: 1
+                stepSize: 0.1
+                onValueChanged: valueSource.temperature = value
+                Component.onCompleted: value = valueSource.temperature
+            }
+        }
+
+        GroupBox {
+            title: qsTr("Blinkers")
+            enabled: !demoSwitch.checked
+            Layout.fillWidth: true
+
+            Column {
+                spacing: 5
+
+                CheckBox { id: leftBlinker; text: qsTr("Left");
+                    onClicked: {
+                        if (checked) {
+                            rightBlinker.checked = false;
+                            valueSource.turnSignal = Qt.LeftArrow;
+                        } else {
+                            valueSource.turnSignal = Qt.NoArrow;
                         }
                     }
-                    CheckBox { id: rightBlinker; text: qsTr("Right");
-                        onClicked: {
-                            if (checked) {
-                                leftBlinker.checked = false;
-                                valueSource.turnSignal = Qt.RightArrow;
-                            } else {
-                                valueSource.turnSignal = Qt.NoArrow;
-                            }
+                }
+                CheckBox { id: rightBlinker; text: qsTr("Right");
+                    onClicked: {
+                        if (checked) {
+                            leftBlinker.checked = false;
+                            valueSource.turnSignal = Qt.RightArrow;
+                        } else {
+                            valueSource.turnSignal = Qt.NoArrow;
                         }
                     }
                 }
             }
         }
+
+        Item { Layout.fillHeight: true } // spacer
     }
 }
