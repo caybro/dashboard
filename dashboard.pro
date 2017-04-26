@@ -3,8 +3,7 @@ TARGET = dashboard
 INCLUDEPATH += .
 QT += quick
 
-SOURCES += \
-    main.cpp
+SOURCES += main.cpp
 
 RESOURCES += \
     dashboard.qrc
