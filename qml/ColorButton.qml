@@ -9,9 +9,9 @@ ToolButton {
 
     signal accepted(color color)
 
-    Rectangle {
-        anchors.fill: parent
-        anchors.margins: 1
+    background: Rectangle {
+        implicitHeight: 30
+        implicitWidth: implicitHeight
         color: root.color
     }
 
@@ -20,7 +20,7 @@ ToolButton {
         visible: false
         showAlphaChannel: true
         title: qsTr("Select color")
-        modality: Qt.ApplicationModal
+        modality: Qt.WindowModal
         onAccepted: root.accepted(color)
     }
 

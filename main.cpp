@@ -68,6 +68,6 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine(QUrl("qrc:/qml/dashboard.qml"));
     if (engine.rootObjects().isEmpty())
-        return -1;
+        return EXIT_FAILURE;
     return app.exec();
 }

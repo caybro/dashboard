@@ -57,7 +57,7 @@ import Qt.labs.settings 1.0
 import QtQuick.Controls.Material 2.0
 
 ApplicationWindow {
-    id: root
+    id: mainWindow
     visible: true
     width: 1024
     height: 600
@@ -72,10 +72,10 @@ ApplicationWindow {
 
     Settings {
         category: "MainWindow"
-        property alias x: root.x
-        property alias y: root.y
-        property alias width: root.width
-        property alias height: root.height
+        property alias x: mainWindow.x
+        property alias y: mainWindow.y
+        property alias width: mainWindow.width
+        property alias height: mainWindow.height
     }
 
     ValueSource {
