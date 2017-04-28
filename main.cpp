@@ -52,6 +52,7 @@
 #include <QtQml/QQmlApplicationEngine>
 #include <QtGui/QFont>
 #include <QtGui/QFontDatabase>
+#include <QQuickStyle>
 #include <QIcon>
 
 int main(int argc, char *argv[])
@@ -59,6 +60,8 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     app.setWindowIcon(QIcon(":/images/gauge.svg"));
     app.setAttribute(Qt::AA_UseHighDpiPixmaps);
+
+    QQuickStyle::setStyle("Material");
 
     QFontDatabase::addApplicationFont(":/fonts/NotoSansUI-Regular.ttf");
     app.setFont(QFont("Noto Sans UI"));

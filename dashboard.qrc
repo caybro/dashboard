@@ -11,5 +11,6 @@
         <file>qml/ColorButton.qml</file>
         <file>images/gauge.svg</file>
         <file>fonts/NotoSansUI-Regular.ttf</file>
+        <file>qml/DoubleSpinBox.qml</file>
     </qresource>
 </RCC>

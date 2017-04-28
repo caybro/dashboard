@@ -1,7 +1,8 @@
 TEMPLATE = app
 TARGET = dashboard
 INCLUDEPATH += .
-QT += quick
+QT += quick quickcontrols2
+CONFIG += qml_debug
 
 SOURCES += main.cpp
 
